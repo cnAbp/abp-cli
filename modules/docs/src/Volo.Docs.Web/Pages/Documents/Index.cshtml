@@ -1,0 +1,44 @@
+﻿@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Docs
+@using Volo.Docs.Localization
+@using Volo.Docs.Pages.Documents
+@inject IHtmlLocalizer<DocsResource> L
+@model IndexModel
+@{
+}
+@section styles {
+    <abp-style-bundle name="@typeof(IndexModel).FullName">
+        <abp-style src="/Pages/Documents/Shared/Styles/vs.css" />
+    </abp-style-bundle>
+}
+<div class="p-5">
+
+    @if (Model.Projects == null || !Model.Projects.Any())
+    {
+        <div class="alert alert-secondary text-center" role="alert">
+            @L["NoProjectWarning"]
+        </div>
+    }
+    else
+    {
+        <h1>@L["Projects"]</h1>
+        <p>
+            <ul style="list-style-type: upper-roman;">
+                @foreach (var project in Model.Projects)
+                {
+                    <li>
+                        <h3>
+                            <a asp-page="./Project/Index"
+                               asp-route-projectName="@project.ShortName"
+                               asp-route-version="@DocsAppConsts.Latest">
+                                @project.Name
+                            </a>
+                        </h3>
+                    </li>
+                }
+            </ul>
+        </p>
+    }
+
+</div>

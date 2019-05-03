@@ -1,0 +1,35 @@
+﻿@page
+@model Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.Demo.Pages.Components.BlockquotesModel
+@{
+    ViewData["Title"] = "Badges";
+}
+
+@section styles {
+    <abp-style-bundle>
+        <abp-style src="/css/demo.css" />
+    </abp-style-bundle>
+}
+
+<h2>Blockquotes</h2>
+
+<p>Based on <a href="http://getbootstrap.com/docs/4.1/content/typography/#blockquotes" target="_blank"> Bootstrap Blockquotes</a>.</p>
+
+<h4># Blockquote Examples</h4>
+
+<div class="demo-with-code">
+    <div class="demo-area">
+        <abp-blockquote>
+            <p>"I love deadlines. I love the whooshing noise they make as they go by."</p>
+            <footer> Douglas Adams, The Salmon of Doubt </footer>
+        </abp-blockquote>
+    </div>
+    <div class="code-area">
+        <pre>
+&lt;abp-blockquote&gt;
+   &lt;p&gt;&quot;I love deadlines. I love the whooshing noise they make as they go by.&quot;&lt;/p&gt;
+   &lt;footer&gt; Douglas Adams, The Salmon of Doubt &lt;/footer&gt;
+&lt;/abp-blockquote&gt;
+</pre>
+    </div>
+</div>
+

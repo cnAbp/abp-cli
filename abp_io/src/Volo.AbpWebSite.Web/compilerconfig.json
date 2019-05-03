@@ -1,0 +1,10 @@
+﻿[
+  {
+    "outputFile": "wwwroot/scss/vs.css",
+    "inputFile": "wwwroot/scss/vs.scss"
+  },
+  {
+    "outputFile": "Pages/Applications.css",
+    "inputFile": "Pages/Applications.scss"
+  }
+]
