@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
 using Volo.Abp.Cli.Args;
 using Volo.Abp.DependencyInjection;
 
@@ -6,17 +8,22 @@ namespace Volo.Abp.Cli.Commands
 {
     public class CommandSelector : ICommandSelector, ITransientDependency
     {
+        protected CliOptions Options { get; }
+
+        public CommandSelector(IOptions<CliOptions> options)
+        {
+            Options = options.Value;
+        }
+
         public Type Select(CommandLineArgs commandLineArgs)
         {
-            //TODO: Create options to define commands
-            //TODO: Get from dependency injection instead of new?
-
-            if (commandLineArgs.Command == "new")
+            if (commandLineArgs.Command.IsNullOrWhiteSpace())
             {
-                return typeof(NewProjectCommand);
+                return typeof(HelpCommand);
             }
 
-            return typeof(MainHelpCommand);
+            return Options.Commands.GetOrDefault(commandLineArgs.Command)
+                   ?? typeof(HelpCommand);
         }
     }
 }

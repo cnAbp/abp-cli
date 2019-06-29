@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Linq;
+using Volo.Abp.MultiTenancy;
 
 namespace Volo.Abp.Application.Services
 {
@@ -45,28 +45,46 @@ namespace Volo.Abp.Application.Services
     }
 
     public abstract class AsyncCrudAppService<TEntity, TEntityDto, TKey, TGetListInput, TCreateInput, TUpdateInput>
-       : CrudAppServiceBase<TEntity, TEntityDto, TKey, TGetListInput, TCreateInput, TUpdateInput>,
-        IAsyncCrudAppService<TEntityDto, TKey, TGetListInput, TCreateInput, TUpdateInput>
+        : AsyncCrudAppService<TEntity, TEntityDto, TEntityDto, TKey, TGetListInput, TCreateInput, TUpdateInput>
+        where TEntity : class, IEntity<TKey>
+        where TEntityDto : IEntityDto<TKey>
+    {
+        protected AsyncCrudAppService(IRepository<TEntity, TKey> repository)
+            : base(repository)
+        {
+
+        }
+
+        protected override TEntityDto MapToGetListOutputDto(TEntity entity)
+        {
+            return MapToGetOutputDto(entity);
+        }
+    }
+
+    public abstract class AsyncCrudAppService<TEntity, TGetOutputDto, TGetListOutputDto, TKey, TGetListInput, TCreateInput, TUpdateInput>
+       : CrudAppServiceBase<TEntity, TGetOutputDto, TGetListOutputDto, TKey, TGetListInput, TCreateInput, TUpdateInput>,
+        IAsyncCrudAppService<TGetOutputDto, TGetListOutputDto, TKey, TGetListInput, TCreateInput, TUpdateInput>
            where TEntity : class, IEntity<TKey>
-           where TEntityDto : IEntityDto<TKey>
+        where TGetOutputDto : IEntityDto<TKey>
+        where TGetListOutputDto : IEntityDto<TKey>
     {
         public IAsyncQueryableExecuter AsyncQueryableExecuter { get; set; }
 
         protected AsyncCrudAppService(IRepository<TEntity, TKey> repository)
-            :base(repository)
+            : base(repository)
         {
             AsyncQueryableExecuter = DefaultAsyncQueryableExecuter.Instance;
         }
 
-        public virtual async Task<TEntityDto> GetAsync(TKey id)
+        public virtual async Task<TGetOutputDto> GetAsync(TKey id)
         {
             await CheckGetPolicyAsync();
 
             var entity = await GetEntityByIdAsync(id);
-            return MapToEntityDto(entity);
+            return MapToGetOutputDto(entity);
         }
 
-        public virtual async Task<PagedResultDto<TEntityDto>> GetListAsync(TGetListInput input)
+        public virtual async Task<PagedResultDto<TGetListOutputDto>> GetListAsync(TGetListInput input)
         {
             await CheckGetListPolicyAsync();
 
@@ -79,36 +97,35 @@ namespace Volo.Abp.Application.Services
 
             var entities = await AsyncQueryableExecuter.ToListAsync(query);
 
-            return new PagedResultDto<TEntityDto>(
+            return new PagedResultDto<TGetListOutputDto>(
                 totalCount,
-                entities.Select(MapToEntityDto).ToList()
+                entities.Select(MapToGetListOutputDto).ToList()
             );
         }
 
-        public virtual async Task<TEntityDto> CreateAsync(TCreateInput input)
+        public virtual async Task<TGetOutputDto> CreateAsync(TCreateInput input)
         {
             await CheckCreatePolicyAsync();
 
             var entity = MapToEntity(input);
 
-            await Repository.InsertAsync(entity);
-            await CurrentUnitOfWork.SaveChangesAsync();
+            TryToSetTenantId(entity);
 
-            return MapToEntityDto(entity);
+            await Repository.InsertAsync(entity, autoSave: true);
+
+            return MapToGetOutputDto(entity);
         }
 
-        public virtual async Task<TEntityDto> UpdateAsync(TKey id, TUpdateInput input)
+        public virtual async Task<TGetOutputDto> UpdateAsync(TKey id, TUpdateInput input)
         {
             await CheckUpdatePolicyAsync();
 
             var entity = await GetEntityByIdAsync(id);
-
             //TODO: Check if input has id different than given id and normalize if it's default value, throw ex otherwise
-
             MapToEntity(input, entity);
-            await CurrentUnitOfWork.SaveChangesAsync();
+            await Repository.UpdateAsync(entity, autoSave: true);
 
-            return MapToEntityDto(entity);
+            return MapToGetOutputDto(entity);
         }
 
         public virtual async Task DeleteAsync(TKey id)

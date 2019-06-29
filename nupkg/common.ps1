@@ -17,8 +17,7 @@ $solutions = (
     "modules/background-jobs",
     "modules/blogging",
     "modules/docs",
-    "modules/client-simulation",
-    "abp_io"
+    "modules/client-simulation"
 )
 
 # List of projects
@@ -37,10 +36,12 @@ $projects = (
     "framework/src/Volo.Abp.AspNetCore.Mvc.UI",
     "framework/src/Volo.Abp.AspNetCore.Mvc.UI.Bootstrap",
     "framework/src/Volo.Abp.AspNetCore.Mvc.UI.Bundling",
+    "framework/src/Volo.Abp.AspNetCore.Mvc.UI.Dashboards",
     "framework/src/Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy",
     "framework/src/Volo.Abp.AspNetCore.Mvc.UI.Packages",
     "framework/src/Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic",
     "framework/src/Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared",
+    "framework/src/Volo.Abp.AspNetCore.Mvc.UI.Widgets",
     "framework/src/Volo.Abp.AspNetCore.TestBase",    
     "framework/src/Volo.Abp.Auditing",
     "framework/src/Volo.Abp.Authorization",
@@ -56,6 +57,7 @@ $projects = (
     "framework/src/Volo.Abp.Cli.Core",
     "framework/src/Volo.Abp.Cli",
     "framework/src/Volo.Abp.Core",
+    "framework/src/Volo.Abp.Dapper",
     "framework/src/Volo.Abp.Data",
     "framework/src/Volo.Abp.Ddd.Application",
     "framework/src/Volo.Abp.Ddd.Domain",
@@ -68,6 +70,7 @@ $projects = (
     "framework/src/Volo.Abp.EventBus",
     "framework/src/Volo.Abp.EventBus.RabbitMQ",
     "framework/src/Volo.Abp.Features",
+    "framework/src/Volo.Abp.FluentValidation",
     "framework/src/Volo.Abp.Guids",
     "framework/src/Volo.Abp.HangFire",
     "framework/src/Volo.Abp.Http",
@@ -87,6 +90,7 @@ $projects = (
     "framework/src/Volo.Abp.Serialization",
     "framework/src/Volo.Abp.Settings",
     "framework/src/Volo.Abp.Sms",
+    "framework/src/Volo.Abp.Specifications",
     "framework/src/Volo.Abp.TestBase",
     "framework/src/Volo.Abp.Threading",
     "framework/src/Volo.Abp.Timing",
@@ -202,8 +206,5 @@ $projects = (
     
     # modules/client-simulation
     "modules/client-simulation/src/Volo.ClientSimulation",
-    "modules/client-simulation/src/Volo.ClientSimulation.Web",
-    
-    # abp_io/SolutionTemplating
-    "abp_io/src/Volo.Utils.SolutionTemplating"
+    "modules/client-simulation/src/Volo.ClientSimulation.Web"
 )
